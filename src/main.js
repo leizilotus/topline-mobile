@@ -5,11 +5,16 @@ import store from './store'
 
 import 'amfe-flexible'
 
-import {
-  Button
-} from 'vant'
+// import {
+//   Button
+// } from 'vant'
 
-Vue.use(Button)
+// Vue.use(Button)
+
+import Vant from 'vant'
+import 'vant/lib/index.css'
+
+Vue.use(Vant)
 
 Vue.config.productionTip = false
 
