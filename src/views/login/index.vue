@@ -57,6 +57,7 @@ export default {
 
   methods: {
     async handleLogin () {
+      this.loginLoading = true
       try {
         // 发送之前，验证表单数据，校验通过，才能进行登录
         const { mobile, code } = this.user
