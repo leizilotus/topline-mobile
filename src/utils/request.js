@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 
 const request = axios.create({
   // baseURL: 'http://toutiao.course.itcast.cn'
@@ -6,7 +7,11 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(function (config) {
-  // Do something before request is sent
+  // 如果登录了，则统一给接口添加用户token
+  const { user } = store.state
+  if (user) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
   return config
 }, function (error) {
   // Do something with request error
