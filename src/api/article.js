@@ -10,7 +10,7 @@ export const getArticles = ({
   withTop
 }) => {
   return request({
-    method: 'POST',
+    method: 'GET',
     url: '/app/v1_1/articles',
     params: {
       channel_id: channelId,

@@ -16,6 +16,12 @@ import 'vant/lib/index.css'
 
 Vue.use(Vant)
 
+Vue.prototype.$sleep = time => {
+  return new Promise((resolve, reject) => {
+    window.setTimeout(resolve, time)
+  })
+}
+
 Vue.config.productionTip = false
 
 new Vue({
