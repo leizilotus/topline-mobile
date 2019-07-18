@@ -10,9 +10,9 @@
       :key="channelItem.id"
       :title="channelItem.name"
     >
-      <van-pull-refresh v-model="pullReFreshLoading" @refresh="onRefresh">
+      <van-pull-refresh v-model="channelItem.downPullLoading" @refresh="onRefresh">
         <van-list
-          v-model="loading"
+          v-model="upPullLoading"
           :finished="finished"
           finished-text="没有更多了"
           @load="onLoad"
@@ -48,9 +48,9 @@ export default {
     return {
       activeChannelIndex: 0,
       // articles: [],
-      loading: false,
+      upPullLoading: false,
       finished: false,
-      pullReFreshLoading: false,
+      downPullLoading: false,
       channels: []
     }
   },
@@ -80,9 +80,9 @@ export default {
       await this.$sleep(800)
       const articles = await this.loadArticles()
       // 将请求得到的数据，push 到频道文章的列表中
-      this.activeChannels.articles.push(...articles)
+      this.activeChannels.articles.push(...articles.results)
 
-      this.loading = false
+      this.upPullLoading = false
       // // 异步更新数据
       // setTimeout(() => {
       //   for (let i = 0; i < 10; i++) {
@@ -99,11 +99,25 @@ export default {
     },
 
     // 下拉刷新，应该往频道的 articles 中顶部 unshift 添加数据，或者重置数据
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.pullReFreshLoading = false
-      }, 1000)
+    async  onRefresh () {
+      this.activeChannels.timestamp = Date.now()
+      const data = await this.loadArticles()
+      console.log(data)
+      // 如果有最新数据， 直接替换频道的文章列表
+      if (data.results.length) {
+        this.activeChannels.articles = data.results
+        this.activeChannels.timestamp = data.pre_timestamp
+
+        // 当下拉刷新有数据并重置以后数据无法满足一屏，所以 onLoad 一下
+        this.onLoad()
+      }
+      // 如果没有最新数据，则什么都不做
+      this.$toast('刷新成功')
+      this.activeChannels.downPullLoading = false
+      // setTimeout(() => {
+      //   this.$toast('刷新成功')
+      //   this.pullReFreshLoading = false
+      // }, 1000)
     },
 
     async loadChannels () {
@@ -146,7 +160,7 @@ export default {
         timestamp,
         withTop: 1
       })
-      console.log(data)
+      // console.log(data)
       // 如果请求的这个时间戳里，没有最新数据，则请求上一次的数据
       if (data.pre_timestamp && data.results.length === 0) {
         this.activeChannels.timestamp = data.pre_timestamp
@@ -156,7 +170,7 @@ export default {
       // 如果这次请求的时间戳里有最新数据
       if (data.results.length) {
         this.activeChannels.timestamp = data.pre_timestamp
-        return data.results
+        return data
       }
     }
   }
