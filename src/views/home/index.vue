@@ -5,7 +5,7 @@
 
   <!-- 频道标签 -->
   <van-tabs class="channel-tabs" v-model="activeChannelIndex">
-    <div slot="nav-right" class="wap-nav">
+    <div slot="nav-right" class="wap-nav" @click="isChannelShow = true">
       <van-icon name="wap-nav" />
     </div>
     <van-tab
@@ -41,7 +41,7 @@
   </van-tabbar>
 
   <!-- 频道组件弹框 -->
-  <home-channel></home-channel>
+  <home-channel v-model="isChannelShow"></home-channel>
 
 </div>
 </template>
@@ -63,7 +63,8 @@ export default {
       upPullLoading: false,
       finished: false,
       downPullLoading: false,
-      channels: []
+      channels: [],
+      isChannelShow: false
     }
   },
 
