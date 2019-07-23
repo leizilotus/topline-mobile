@@ -3,8 +3,11 @@
   <!-- 头部 -->
   <van-nav-bar title="首页" fixed/>
 
-  <!-- tab栏切换 -->
+  <!-- 频道标签 -->
   <van-tabs class="channel-tabs" v-model="activeChannelIndex">
+    <div slot="nav-right" class="wap-nav">
+      <van-icon name="wap-nav" />
+    </div>
     <van-tab
       v-for="channelItem in channels"
       :key="channelItem.id"
@@ -36,14 +39,23 @@
     <van-tabbar-item name="friends" icon="friends-o"  to="/video">视频</van-tabbar-item>
     <van-tabbar-item name="setting" icon="setting-o"  to="/my">我的</van-tabbar-item>
   </van-tabbar>
+
+  <!-- 频道组件弹框 -->
+  <home-channel></home-channel>
+
 </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/channel'
 import { getArticles } from '@/api/article'
+import HomeChannel from './components/channel'
+
 export default {
   name: 'HomeIndex',
+  components: {
+    HomeChannel
+  },
   data () {
     return {
       activeChannelIndex: 0,
@@ -209,5 +221,13 @@ export default {
 
 .channel-tabs /deep/ .van-tabs__content {
   margin-top: 92px;
+}
+.channel-tabs .wap-nav {
+  position: sticky;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  opacity: .7;
 }
 </style>
